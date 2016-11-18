@@ -151,6 +151,9 @@
 #define   RTL8367B_EXT_RGMXF_TXDELAY_MASK	1
 #define   RTL8367B_EXT_RGMXF_RXDELAY_MASK	0x7
 
+#define RTL8367B_REG_PHY_AD			0x130f
+#define   RTL8367B_PDNPHY_OFFSET		BIT(5)
+
 #define RTL8367B_DI_FORCE_REG(_x)		(0x1310 + (_x) + ((_x > 1) ? 0xB2 : 0))
 #define   RTL8367B_DI_FORCE_MODE		BIT(12)
 #define   RTL8367B_DI_FORCE_NWAY		BIT(7)
@@ -980,6 +983,9 @@ static int rtl8367b_setup(struct rtl8366_smi *smi)
 	/* set maximum packet length to 1536 bytes */
 	REG_RMW(smi, RTL8367B_SWC0_REG, RTL8367B_SWC0_MAX_LENGTH_MASK,
 		RTL8367B_SWC0_MAX_LENGTH_1536);
+
+	/* enable all PHY (if disabled by bootstrap) */
+	REG_RMW(smi, RTL8367B_REG_PHY_AD, RTL8367B_PDNPHY_OFFSET, 0);
 
 	/*
 	 * discard VLAN tagged packets if the port is not a member of
