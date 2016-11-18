@@ -896,11 +896,30 @@ static int rtl8367b_extif_init_of(struct rtl8366_smi *smi, int id,
 
 	return err;
 }
+
+static int rtl8367b_cpu_init_of(struct rtl8366_smi *smi)
+{
+	struct device_node *np = smi->parent->of_node;
+	u32 cpu_id;
+
+	smi->cpu_port = RTL8367B_CPU_PORT_NUM;
+
+	if (!of_property_read_u32(np, "realtek,cpu-port", &cpu_id))
+		smi->cpu_port = cpu_id;
+
+	return 0;
+}
 #else
 static int rtl8367b_extif_init_of(struct rtl8366_smi *smi, int id,
 				  const char *name)
 {
 	return -EINVAL;
+}
+
+static int rtl8367b_cpu_init_of(struct rtl8366_smi *smi)
+{
+	smi->cpu_port = RTL8367B_CPU_PORT_NUM;
+	return 0;
 }
 #endif
 
@@ -1395,7 +1414,7 @@ static int rtl8367b_switch_init(struct rtl8366_smi *smi)
 	int err;
 
 	dev->name = "RTL8367B";
-	dev->cpu_port = RTL8367B_CPU_PORT_NUM;
+	dev->cpu_port = smi->cpu_port;
 	dev->ports = RTL8367B_NUM_PORTS;
 	dev->vlans = RTL8367B_NUM_VIDS;
 	dev->ops = &rtl8367b_sw_ops;
@@ -1524,11 +1543,12 @@ static int rtl8367b_probe(struct platform_device *pdev)
 	if (!smi)
 		return -ENODEV;
 
+	rtl8367b_cpu_init_of(smi);
+
 	smi->clk_delay = 1500;
 	smi->cmd_read = 0xb9;
 	smi->cmd_write = 0xb8;
 	smi->ops = &rtl8367b_smi_ops;
-	smi->cpu_port = RTL8367B_CPU_PORT_NUM;
 	smi->num_ports = RTL8367B_NUM_PORTS;
 	smi->num_vlan_mc = RTL8367B_NUM_VLANS;
 	smi->mib_counters = rtl8367b_mib_counters;
