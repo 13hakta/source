@@ -402,6 +402,38 @@ define Device/jhr-n926r
 endef
 TARGET_DEVICES += jhr-n926r
 
+define Device/keenetic
+  DTS := KEENETIC
+  DEVICE_TITLE := ZyXEL Keenetic
+  DEVICE_PACKAGES := kmod-usb-ohci kmod-usb2 kmod-ledtrig-netdev
+  IMAGES += factory.bin
+  IMAGE/factory.bin := $$(sysupgrade_bin) | pad-to 64k | check-size $$$$(IMAGE_SIZE) | \
+	zyimage -d 0x4215 -v "ZyXEL Keenetic"
+endef
+TARGET_DEVICES += keenetic
+
+define Device/kn-4g-a
+  DTS := KEENETIC_4G_A
+  DEVICE_TITLE := ZyXEL Keenetic 4G rev.A
+  DEVICE_PACKAGES := kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-usb-ledtrig-usbport kmod-ledtrig-netdev
+  IMAGE_SIZE := $(ralink_default_fw_size_4M)
+  IMAGES += factory.bin
+  IMAGE/factory.bin := $$(sysupgrade_bin) | pad-to 64k | check-size $$$$(IMAGE_SIZE) | \
+	zyimage -d 0x4115 -v "ZyXEL Keenetic 4G rev.A"
+endef
+TARGET_DEVICES += kn-4g-a
+
+define Device/kn-lite-a
+  DTS := KEENETIC_LITE_A
+  DEVICE_TITLE := ZyXEL Keenetic Lite rev.A
+  DEVICE_PACKAGES := kmod-ledtrig-netdev
+  IMAGE_SIZE := $(ralink_default_fw_size_4M)
+  IMAGES += factory.bin
+  IMAGE/factory.bin := $$(sysupgrade_bin) | pad-to 64k | check-size $$$$(IMAGE_SIZE) | \
+	zyimage -d 0x0417 -v "ZyXEL Keenetic Lite rev.A"
+endef
+TARGET_DEVICES += kn-lite-a
+
 define Device/m2m
   DTS := M2M
   UIMAGE_NAME:= Linux Kernel Image
@@ -511,6 +543,26 @@ define Device/mzk-wdpr
   DEVICE_TITLE := Planex MZK-WDPR
 endef
 TARGET_DEVICES += mzk-wdpr
+
+define Device/nbg-4104
+  DTS := NBG-4104
+  DEVICE_TITLE := ZyXEL Keenetic Lite rev.B
+  DEVICE_PACKAGES := kmod-ledtrig-netdev
+  IMAGES += factory.bin
+  IMAGE/factory.bin := $$(sysupgrade_bin) | pad-to 64k | check-size $$$$(IMAGE_SIZE) | \
+	zyimage -d 0x4104 -v "ZyXEL Keenetic Lite rev.B"
+endef
+TARGET_DEVICES += nbg-4104
+
+define Device/nbg-4114
+  DTS := NBG-4114
+  DEVICE_TITLE := ZyXEL Keenetic 4G rev.B
+  DEVICE_PACKAGES := kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-usb-ledtrig-usbport kmod-ledtrig-netdev
+  IMAGES += factory.bin
+  IMAGE/factory.bin := $$(sysupgrade_bin) | pad-to 64k | check-size $$$$(IMAGE_SIZE) | \
+	zyimage -d 0x5115 -v "ZyXEL Keenetic 4G rev.B"
+endef
+TARGET_DEVICES += nbg-4114
 
 define Device/nbg-419n
   DTS := NBG-419N

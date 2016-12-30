@@ -25,12 +25,17 @@ get_status_led() {
 	e1700|\
 	ex3700|\
 	fonera20n|\
+	keenetic|\
+	kn-4g-a|\
+	kn-lite-a|\
 	kn_rc|\
 	kn_rf|\
 	kng_rc|\
 	mzk-750dhp|\
 	mzk-dp150n|\
 	mzk-w300nh2|\
+	nbg-4104|\
+	nbg-4114|\
 	nbg-419n|\
 	nbg-419n2|\
 	pwh2004|\

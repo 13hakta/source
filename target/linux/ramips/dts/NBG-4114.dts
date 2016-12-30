@@ -1,0 +1,174 @@
+/dts-v1/;
+
+#include "rt5350.dtsi"
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+
+/ {
+	compatible = "NBG-4114", "ralink,rt5350-soc";
+	model = "ZyXEL Keenetic 4G rev.B";
+
+	gpio-leds {
+		compatible = "gpio-leds";
+
+		power {
+			label = "nbg-4114:green:power";
+			gpios = <&gpio0 9 GPIO_ACTIVE_LOW>;
+		};
+
+		usb {
+			label = "nbg-4114:green:usb";
+			gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
+		};
+
+		wan {
+			label = "nbg-4114:green:wan";
+			gpios = <&gpio0 11 GPIO_ACTIVE_HIGH>;
+		};
+
+		wifi {
+			label = "nbg-4114:green:wifi";
+			gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
+		};
+
+	};
+
+	gpio-keys-polled {
+		compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		poll-interval = <20>;
+
+		reset {
+			label = "reset";
+			gpios = <&gpio0 10 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_RESTART>;
+		};
+
+		wps {
+			label = "wps";
+			gpios = <&gpio0 0 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_WPS_BUTTON>;
+		};
+	};
+
+	gpio_export {
+		compatible = "gpio-export";
+		#size-cells = <0>;
+
+		gpio_unk1 {
+			gpio-export,name = "unk1";
+			gpio-export,output = <0>;
+			gpios = <&gpio0 1 GPIO_ACTIVE_LOW>;
+		};
+
+		gpio_unk2 {
+			gpio-export,name = "unk2";
+			gpio-export,output = <0>;
+			gpios = <&gpio0 2 GPIO_ACTIVE_LOW>;
+		};
+
+		gpio_unk3 {
+			gpio-export,name = "unk3";
+			gpio-export,output = <0>;
+			gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+		};
+
+		gpio_unk4 {
+			gpio-export,name = "unk4";
+			gpio-export,output = <0>;
+			gpios = <&gpio0 4 GPIO_ACTIVE_LOW>;
+		};
+
+		gpio_unk5 {
+			gpio-export,name = "unk5";
+			gpio-export,output = <0>;
+			gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
+		};
+
+		gpio_unk6 {
+			gpio-export,name = "unk6";
+			gpio-export,output = <0>;
+			gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
+		};
+
+		gpio_unk8 {
+			gpio-export,name = "unk8";
+			gpio-export,output = <0>;
+			gpios = <&gpio0 8 GPIO_ACTIVE_LOW>;
+		};
+
+		gpio_unk14 {
+			gpio-export,name = "unk14";
+			gpio-export,output = <0>;
+			gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
+		};
+	};
+};
+
+&spi0 {
+	status = "okay";
+
+	m25p80@0 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		reg = <0>;
+		compatible = "jedec,spi-nor";
+		linux,modalias = "m25p80", "s25fl064k";
+		spi-max-frequency = <10000000>;
+
+		partition@0 {
+			label = "u-boot";
+			reg = <0x0 0x30000>;
+			read-only;
+		};
+
+		partition@30000 {
+			label = "u-boot-env";
+			reg = <0x30000 0x10000>;
+			read-only;
+		};
+
+		factory: partition@40000 {
+			label = "factory";
+			reg = <0x40000 0x10000>;
+			read-only;
+		};
+
+		partition@50000 {
+			label = "firmware";
+			reg = <0x50000 0x7b0000>;
+		};
+	};
+};
+
+&pinctrl {
+	state_default: pinctrl0 {
+		gpio {
+			ralink,group = "i2c", "uartf";
+			ralink,function = "gpio";
+		};
+	};
+};
+
+&ethernet {
+	mtd-mac-address = <&factory 0x4>;
+};
+
+&esw {
+	ralink,portmap = <0x2f>;
+	ralink,led_polarity = <0x17>;
+};
+
+&wmac {
+	ralink,mtd-eeprom = <&factory 0>;
+};
+
+&ehci {
+	status = "okay";
+};
+
+&ohci {
+	status = "okay";
+};

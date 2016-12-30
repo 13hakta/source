@@ -74,6 +74,9 @@ platform_check_image() {
 	jhr-n805r|\
 	jhr-n825r|\
 	jhr-n926r|\
+	keenetic|\
+	kn-4g-a|\
+	kn-lite-a|\
 	kn_rc|\
 	kn_rf|\
 	kng_rc|\
@@ -101,6 +104,8 @@ platform_check_image() {
 	mzk-ex750np|\
 	mzk-w300nh2|\
 	mzk-wdpr|\
+	nbg-4104|\
+	nbg-4114|\
 	nbg-419n|\
 	nbg-419n2|\
 	newifi-d1|\

@@ -492,3 +492,44 @@ define Device/zte-q7
   DEVICE_TITLE := ZTE Q7
 endef
 TARGET_DEVICES += zte-q7
+
+define Device/kn-lite-ii
+  DTS := KEENETIC_LITE_II
+  DEVICE_TITLE := ZyXEL Keenetic Lite II
+  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ohci kmod-usb-ledtrig-usbport
+  IMAGES += factory.bin
+  IMAGE/factory.bin := $$(IMAGE/sysupgrade.bin) | pad-to 64k | check-size $$$$(IMAGE_SIZE) | \
+	zyimage -d 0x1302 -v "ZyXEL Keenetic Lite II"
+endef
+TARGET_DEVICES += kn_rc
+
+define Device/kn_rc
+  DTS := kn_rc
+  DEVICE_TITLE := ZyXEL Keenetic Omni
+  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ohci kmod-usb-ledtrig-usbport
+  IMAGES += factory.bin
+  IMAGE/factory.bin := $$(IMAGE/sysupgrade.bin) | pad-to 64k | check-size $$$$(IMAGE_SIZE) | \
+	zyimage -d 4882 -v "ZyXEL Keenetic Omni"
+endef
+TARGET_DEVICES += kn_rc
+
+define Device/kn_rf
+  DTS := kn_rf
+  DEVICE_TITLE := ZyXEL Keenetic Omni II
+  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ohci kmod-usb-ledtrig-usbport
+  IMAGES += factory.bin
+  IMAGE/factory.bin := $$(IMAGE/sysupgrade.bin) | pad-to 64k | check-size $$$$(IMAGE_SIZE) | \
+	zyimage -d 2102034 -v "ZyXEL Keenetic Omni II"
+endef
+TARGET_DEVICES += kn_rf
+
+define Device/kng_rc
+  DTS := kng_rc
+  IMAGE_SIZE := $(ralink_default_fw_size_16M)
+  DEVICE_TITLE := ZyXEL Keenetic Viva
+  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ohci kmod-usb-ledtrig-usbport kmod-switch-rtl8366-smi kmod-switch-rtl8367b
+  IMAGES += factory.bin
+  IMAGE/factory.bin := $$(sysupgrade_bin) | pad-to 64k | check-size $$$$(IMAGE_SIZE) | \
+	zyimage -d 8997 -v "ZyXEL Keenetic Viva"
+endef
+TARGET_DEVICES += kng_rc
