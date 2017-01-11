@@ -579,9 +579,35 @@ static int rtl8367b_write_initvals(struct rtl8366_smi *smi,
 {
 	int err;
 	int i;
+#ifdef CONFIG_OF
+	const __be32 *pinitvals;
+	int num_initvals;
+#endif
 
 	for (i = 0; i < count; i++)
 		REG_WR(smi, initvals[i].reg, initvals[i].val);
+
+#ifdef CONFIG_OF
+	/* get extra initvals from device tree */
+	pinitvals = of_get_property(smi->parent->of_node,
+				    "realtek,initvals",
+				    &num_initvals);
+
+	if (!pinitvals)
+		return;
+
+	if (num_initvals < (2 * sizeof(*pinitvals)))
+		return -EINVAL;
+
+	num_initvals /= sizeof(*pinitvals);
+
+	for (i = 0; i < num_initvals - 1; i += 2) {
+		u32 reg = be32_to_cpup(pinitvals + i);
+		u32 val = be32_to_cpup(pinitvals + i + 1);
+
+		REG_WR(smi, reg, val);
+	}
+#endif
 
 	return 0;
 }
