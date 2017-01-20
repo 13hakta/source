@@ -111,6 +111,10 @@ define Build/wrg-header
 	mv $@.new $@
 endef
 
+define Build/zyimage
+	$(STAGING_DIR_HOST)/bin/zyimage $(1) $@
+endef
+
 #
 # The real magic happens inside these templates
 #
