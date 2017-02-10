@@ -1722,6 +1722,8 @@ static int rtl8367_detect(struct rtl8366_smi *smi)
 	dev_info(smi->parent, "RTL%s ver. %u chip found\n",
 		 chip_name, rtl_ver & RTL8367_RTL_VER_MASK);
 
+	smi->chip_ver = rtl_ver;
+
 	return 0;
 }
 
