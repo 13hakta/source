@@ -639,6 +639,20 @@ static int rtl8366_init_vlan(struct rtl8366_smi *smi)
 {
 	int port;
 	int err;
+	int skip_port;
+
+	skip_port = -1;
+
+	// Skip nonexistent port
+	switch (smi->chip_ver) {
+		case 0x1000:
+			skip_port = 5;
+			break;
+
+		case 0x1010:
+			skip_port = 7;
+			break;
+	}
 
 	err = rtl8366_reset_vlan(smi);
 	if (err)
@@ -646,6 +660,8 @@ static int rtl8366_init_vlan(struct rtl8366_smi *smi)
 
 	for (port = 0; port < smi->num_ports; port++) {
 		u32 mask;
+
+		if (port == skip_port) continue;
 
 		if (port == smi->cpu_port)
 			mask = (1 << smi->num_ports) - 1;
