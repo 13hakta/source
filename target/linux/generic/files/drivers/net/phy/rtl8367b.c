@@ -984,8 +984,14 @@ static int rtl8367b_get_vlan_4k(struct rtl8366_smi *smi, u32 vid,
 	/* write table access control word */
 	REG_WR(smi, RTL8367B_TA_CTRL_REG, RTL8367B_TA_CTRL_CVLAN_READ);
 
-	for (i = 0; i < ARRAY_SIZE(data); i++)
+	dev_info(smi->parent, "#1 get_vlan_4k vid %d\n", vid);
+
+	for (i = 0; i < ARRAY_SIZE(data); i++) {
+		dev_info(smi->parent, "#2 get_vlan_4k vid %d, iter #%d\n", vid, i);
 		REG_RD(smi, RTL8367B_TA_RDDATA_REG(i), &data[i]);
+	}
+
+	dev_info(smi->parent, "#3 get_vlan_4k vid %d\n", vid);
 
 	vlan4k->vid = vid;
 	vlan4k->member = (data[0] >> RTL8367B_TA_VLAN0_MEMBER_SHIFT) &
@@ -994,6 +1000,11 @@ static int rtl8367b_get_vlan_4k(struct rtl8366_smi *smi, u32 vid,
 			RTL8367B_TA_VLAN0_UNTAG_MASK;
 	vlan4k->fid = (data[1] >> RTL8367B_TA_VLAN1_FID_SHIFT) &
 		      RTL8367B_TA_VLAN1_FID_MASK;
+
+	dev_info(smi->parent, "#4 get_vlan_4k vid %d pass: %x %x %x\n", vid,
+		vlan4k->member,
+		vlan4k->untag,
+		vlan4k->fid);
 
 	return 0;
 }

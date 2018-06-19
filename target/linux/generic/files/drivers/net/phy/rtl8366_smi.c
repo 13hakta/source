@@ -507,18 +507,23 @@ static int rtl8366_set_pvid(struct rtl8366_smi *smi, unsigned port,
 		if (vlanmc.vid == 0 && vlanmc.member == 0) {
 			/* Update the entry from the 4K table */
 			err = smi->ops->get_vlan_4k(smi, vid, &vlan4k);
-			if (err)
+			if (err) {
+				dev_err(smi->parent, "get_vlan_4k #1 %d\n", vid);
 				return err;
+			}
 
 			vlanmc.vid = vid;
 			vlanmc.member = vlan4k.member;
 			vlanmc.untag = vlan4k.untag;
 			vlanmc.fid = vlan4k.fid;
 			err = smi->ops->set_vlan_mc(smi, i, &vlanmc);
-			if (err)
+			if (err) {
+				dev_err(smi->parent, "set_vlan_mc #2 %d\n", i);
 				return err;
+			}
 
 			err = smi->ops->set_mc_index(smi, port, i);
+			dev_info(smi->parent, "set_mc_index #2 port %d %d\n", port, i);
 			return err;
 		}
 	}
@@ -528,24 +533,31 @@ static int rtl8366_set_pvid(struct rtl8366_smi *smi, unsigned port,
 		int used;
 
 		err = rtl8366_mc_is_used(smi, i, &used);
-		if (err)
+		if (err) {
+			dev_err(smi->parent, "mc_is_used %d\n", i);
 			return err;
+		}
 
 		if (!used) {
 			/* Update the entry from the 4K table */
 			err = smi->ops->get_vlan_4k(smi, vid, &vlan4k);
-			if (err)
+			if (err) {
+				dev_err(smi->parent, "get_vlan_4k #2 %d\n", vid);
 				return err;
+			}
 
 			vlanmc.vid = vid;
 			vlanmc.member = vlan4k.member;
 			vlanmc.untag = vlan4k.untag;
 			vlanmc.fid = vlan4k.fid;
 			err = smi->ops->set_vlan_mc(smi, i, &vlanmc);
-			if (err)
+			if (err) {
+				dev_err(smi->parent, "set_vlan_mc #3 %d\n", i);
 				return err;
+			}
 
 			err = smi->ops->set_mc_index(smi, port, i);
+			dev_info(smi->parent, "set_mc_index #3 port %d %d\n", port, i);
 			return err;
 		}
 	}
